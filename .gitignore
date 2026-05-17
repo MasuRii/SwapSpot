@@ -18,8 +18,7 @@ __pycache__/
 .vscode/
 .idea/
 
-# Django migrations
-**/migrations/
+# Django migrations are source files and should be committed for fresh clones.
 
 # Media files
 media/
