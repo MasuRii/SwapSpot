@@ -36,7 +36,7 @@ SwapSpot is a hybrid marketplace where users can list items for sale, propose ex
 |---|---|---|
 | Framework | [Django](https://www.djangoproject.com/) | 6.0.5 |
 | REST API | [Django REST Framework](https://www.django-rest-framework.org/) | 3.17.1 |
-| Database | SQLite3 (dev), PostgreSQL (prod) | — |
+| Database | SQLite3 (dev) | — |
 | Image Handling | [Pillow](https://python-pillow.org/) | 12.2.0 |
 | Python | Python 3.13+ | — |
 
@@ -89,7 +89,7 @@ python manage.py test
 
 ## Configuration
 
-SwapSpot uses real environment variables first, fills any missing values from a project-root `.env` file if it exists, then applies safe development defaults. Copy `.env.example` to `.env` for local customization:
+SwapSpot is configured for local code review with SQLite by default. It reads real environment variables first, fills any missing values from a project-root `.env` file if it exists, then applies development defaults. Copy `.env.example` to `.env` only if you want local overrides:
 
 ```bash
 cp .env.example .env
@@ -97,11 +97,11 @@ cp .env.example .env
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `DJANGO_SECRET_KEY` | Production only | Development-only fallback | Django secret key for cryptographic signing. Set a unique value before deployment. |
-| `DJANGO_DEBUG` | No | `True` | Enables Django debug mode. Set to `False` in production. |
-| `DJANGO_ALLOWED_HOSTS` | When `DJANGO_DEBUG=False` | `""` | Comma-separated list of allowed hostnames. Required in production. |
+| `DJANGO_SECRET_KEY` | No | Development-only fallback | Local Django secret key for cryptographic signing. |
+| `DJANGO_DEBUG` | No | `True` | Enables Django debug mode for local development. |
+| `DJANGO_ALLOWED_HOSTS` | No | `""` | Optional comma-separated hostnames for local custom-host testing. |
 
-> ⚠️ **Security:** Production startup fails unless `DJANGO_DEBUG=False` is paired with a unique `DJANGO_SECRET_KEY` and at least one `DJANGO_ALLOWED_HOSTS` entry. Never deploy with the example secret key placeholder.
+The Django app always uses the repository-local SQLite database (`db.sqlite3`) for local review; no production database URL or hosted backend configuration is required.
 
 ## Project Structure
 
@@ -183,15 +183,15 @@ All ViewSets support standard CRUD operations (`list`, `create`, `retrieve`, `up
 | `Tag` / `ItemTag` | name, item, tag | Item categorization |
 | `PaymentMethod` | user, provider, account_details | User payment info |
 
-## Deployment
+## Portfolio Showcase
 
-SwapSpot is configured for production deployment on [Render](https://render.com/) via the included `render.yaml` Blueprint:
+This repository is presented as a **portfolio case study**, not a hosted product:
 
-- **Web Service** — Gunicorn + WhiteNoise for static files
-- **Database** — Render PostgreSQL, auto-configured via `DATABASE_URL`
-- **Static Files** — Collected to `staticfiles/` and served with compression
+- A static showcase site lives in [`site/index.html`](site/index.html) and is published to **GitHub Pages** by [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml).
+- The full Django source is included so the implementation can be cloned and run locally for code review.
+- There is no hosted backend, public sign-up, or production database tied to this repository.
 
-To deploy, push this repository to GitHub/GitLab, then create a Render Blueprint from `render.yaml`.
+If you are reviewing the project, the static site is the recommended entry point; the Django app underneath is meant to be inspected and run locally via the [Quick Start](#quick-start) instructions above.
 
 ## Contributing
 

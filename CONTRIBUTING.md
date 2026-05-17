@@ -41,7 +41,7 @@ Thank you for your interest in contributing to SwapSpot! This guide will help yo
    cp .env.example .env
    ```
 
-   `settings.py` loads `.env` automatically. For production-like runs, set a unique `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=False`, and a comma-separated `DJANGO_ALLOWED_HOSTS` value.
+   `settings.py` loads `.env` automatically. The defaults are enough for local review; use `.env` only for local values such as `DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, or `DJANGO_ALLOWED_HOSTS`.
 
 5. **Run migrations**:
 
