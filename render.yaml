@@ -1,0 +1,24 @@
+services:
+  - type: web
+    plan: free
+    name: swapspot
+    runtime: python
+    buildCommand: './build.sh'
+    startCommand: 'gunicorn SwapSpot.wsgi:application'
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: swapspot-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: 'False'
+      - key: DJANGO_ALLOWED_HOSTS
+        value: '.onrender.com'
+      - key: PYTHON_VERSION
+        value: '3.13.0'
+
+databases:
+  - name: swapspot-db
+    plan: free
