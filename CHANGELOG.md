@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Render production deployment configuration (`render.yaml`, `build.sh`).
+- PostgreSQL support via `dj-database-url` with SQLite fallback for local development.
+- WhiteNoise static file serving and compression in production.
+- Production security settings (SSL redirect, secure cookies, proxy headers) when `DJANGO_DEBUG=False`.
+- Auto-detection of Render environment: `.onrender.com` added to `ALLOWED_HOSTS` automatically.
 - Missing `add_item.html` template for fresh-clone readiness.
 - `0002` migration for `Item.picture` and `User.contact` fields.
 - Health regression tests covering templates, API serialization, permissions, and rating signals.
