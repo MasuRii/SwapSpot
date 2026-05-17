@@ -1,4 +1,4 @@
-name: CI/CD
+name: Static Pages
 
 on:
   push:
@@ -14,31 +14,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ── Test job: runs on every push and PR ──
-  test:
+  # ── Validate the static portfolio site on every push and PR ──
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-          cache: 'pip'
+      - name: Verify portfolio entry point exists
+        run: test -f site/index.html
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: HTML Tidy validation (warnings allowed)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y tidy
+          tidy -quiet -errors --gnu-emacs yes site/index.html || true
+          # Hard-fail only if tidy reports parse-level errors
+          tidy -quiet -errors --gnu-emacs yes site/index.html 2>&1 | \
+            grep -E "Error: " && exit 1 || echo "No HTML parse errors."
 
-      - name: Run Django system checks
-        run: python manage.py check
+      - name: Confirm no backend-deploy artifacts remain
+        run: |
+          ! test -f render.yaml || (echo "render.yaml must not be present" && exit 1)
+          ! test -f build.sh    || (echo "build.sh must not be present"    && exit 1)
+          echo "No backend-deploy artifacts present."
 
-      - name: Run tests
-        run: python manage.py test
-
-  # ── Deploy job: GitHub Pages from main only ──
+  # ── Deploy the static portfolio to GitHub Pages from main only ──
   deploy:
-    needs: test
+    needs: validate
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     environment:
