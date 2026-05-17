@@ -36,7 +36,7 @@ SwapSpot is a hybrid marketplace where users can list items for sale, propose ex
 |---|---|---|
 | Framework | [Django](https://www.djangoproject.com/) | 6.0.5 |
 | REST API | [Django REST Framework](https://www.django-rest-framework.org/) | 3.17.1 |
-| Database | SQLite3 | (default) |
+| Database | SQLite3 (dev), PostgreSQL (prod) | — |
 | Image Handling | [Pillow](https://python-pillow.org/) | 12.2.0 |
 | Python | Python 3.13+ | — |
 
@@ -182,6 +182,16 @@ All ViewSets support standard CRUD operations (`list`, `create`, `retrieve`, `up
 | `Notification` | user, content, is_read | In-app notifications |
 | `Tag` / `ItemTag` | name, item, tag | Item categorization |
 | `PaymentMethod` | user, provider, account_details | User payment info |
+
+## Deployment
+
+SwapSpot is configured for production deployment on [Render](https://render.com/) via the included `render.yaml` Blueprint:
+
+- **Web Service** — Gunicorn + WhiteNoise for static files
+- **Database** — Render PostgreSQL, auto-configured via `DATABASE_URL`
+- **Static Files** — Collected to `staticfiles/` and served with compression
+
+To deploy, push this repository to GitHub/GitLab, then create a Render Blueprint from `render.yaml`.
 
 ## Contributing
 
