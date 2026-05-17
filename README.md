@@ -1,79 +1,192 @@
-# Item Exchange & Marketplace Platform
+<p align="center">
+  <img src="static/svg/swapspot-logo-light.svg" alt="SwapSpot Logo" width="320">
+</p>
 
-A community-based platform where users can list items they want to exchange or sell and connect with others to trade goods or purchase items using money. This hybrid system supports both bartering and monetary transactions, providing flexibility and enhancing user engagement.
+<h1 align="center">SwapSpot</h1>
 
-## Minimum Viable Product (MVP) Features
+<p align="center">
+  A community-based item exchange and marketplace platform built with Django.
+</p>
 
-### **1. User Registration and Profiles**
-- **Users can create an account using email and password.** *[Signup Page]*
-- **Users can create and edit their profile, including name, location, and profile picture.** *[User Profile Page / Edit Profile Page]*
-- **Option to add a brief bio, preferred item categories for exchange, and payment details (e.g., PayPal, credit card).** *[User Profile Page / Settings Page]*
-- **Verification of payment methods to ensure secure transactions.** *[User Profile Page / Payment Settings Page]*
+<p align="center">
+  <a href="#quick-start">Quick Start</a> ·
+  <a href="#features">Features</a> ·
+  <a href="#tech-stack">Tech Stack</a> ·
+  <a href="#api">API</a> ·
+  <a href="#contributing">Contributing</a>
+</p>
 
-### **2. Item Listing**
-- **Users can create new item listings with title, description, category, condition, price (optional for sale), and photos (up to 5).** *[New Item Listing Page]*
-- **Option to choose between Listing for Sale, Exchange, or Both.** *[New Item Listing Page / Listing Type Selector]*
-- **Edit or delete existing listings.** *[My Listings Page / Edit Item Page]*
-- **Mark items as available or unavailable.** *[My Listings Page / Item Details Page]*
-- **Option to add tags for better searchability.** *[New Item Listing Page / Edit Item Page]*
+---
 
-### **3. Search and Browse**
-- **Keyword search functionality for items.** *[Search Bar (accessible on all pages) / Search Results Page]*
-- **Category-based browsing.** *[Home Page / Categories Page]*
-- **Filter options including item condition, location, price range, listing type (sale/exchange), and date listed.** *[Search Results Page / Filter Panel]*
-- **Sort results by relevance, price, date, or user rating.** *[Search Results Page / Sort Options]*
+SwapSpot is a hybrid marketplace where users can list items for sale, propose exchanges (barter), or combine both. It supports user profiles, item discovery, proposal negotiation, reviews, and notifications — all through a Django-powered web application with a REST API.
 
-### **4. Exchange and Marketplace Proposal System & Offer Management**
-- **Users can send proposals to exchange or purchase listed items.** *[Item Details Page / Send Proposal Page]*
-  - **For Sales:** Option to buy immediately or send an offer.
-  - **For Exchanges:** Option to propose exchanging items or a combination of items and money.
-- **Proposal includes offered item(s), monetary offer (if applicable), and an optional message.** *[Send Proposal Page]*
-- **Item owners can accept, reject, or counter proposals.** *[Proposals Management Page / Incoming Offers Page]*
-- **Secure payment processing for monetary transactions.** *[Checkout Page / Payment Gateway Integration]*
-- **Ability to view active, pending, and completed transactions.** *[Transaction Dashboard / Transaction History Page]*
+## Features
 
-### **5. Rating and Review System**
-- **Users can rate other users on a 5-star scale after completing a transaction (exchange or sale).** *[Rate User Page / Transaction Completion Page]*
-- **Option to leave a written review along with the rating.** *[Rate User Page / Review Submission Page]*
-- **System calculates and displays average user rating.** *[User Profile Page]*
-- **Recent reviews visible on user profiles.** *[User Profile Page]*
-- **Functionality to report inappropriate reviews or users.** *[User Profile Page / Report User Page]*
+- **User Registration & Profiles** — Two-step signup, profile editing, avatar uploads, and average rating display.
+- **Item Listings** — Create, edit, and delete items with title, description, category, condition, price, and photo.
+- **Search & Browse** — Keyword search, category filtering, and homepage feed of available items.
+- **Proposal System** — Send, accept, or reject exchange/purchase proposals between users.
+- **Rating & Reviews** — 5-star ratings with automatic average calculation via Django signals.
+- **Notifications** — In-app notification system for transaction and proposal updates.
+- **REST API** — Full CRUD endpoints for all models via Django REST Framework ViewSets.
 
-### **6. Payment and Transaction Management**
-- **Integrated secure payment gateway (e.g., Gcash, Paymaya) for handling transactions.** *[Payment Gateway Integration]*
-- **Refund and dispute resolution mechanisms.** *[Support Page / Dispute Resolution Page]*
-- **Transaction history with detailed records of all monetary and barter exchanges.** *[Transaction History Page]*
+## Tech Stack
 
-### **7. Notification System**
-- **Push notifications for new proposals, messages, payments, and status updates.** *[System Notifications / Push Notifications Service]*
-- **In-app notification center to view all alerts.** *[Notifications Page / Notification Center]*
-- **Unread notifications are highlighted. Notifications automatically update to read, and the highlight is removed once clicked.** *[Notifications Page]*
+| Layer | Technology | Version |
+|---|---|---|
+| Framework | [Django](https://www.djangoproject.com/) | 6.0.5 |
+| REST API | [Django REST Framework](https://www.django-rest-framework.org/) | 3.17.1 |
+| Database | SQLite3 | (default) |
+| Image Handling | [Pillow](https://python-pillow.org/) | 12.2.0 |
+| Python | Python 3.13+ | — |
 
-## Documents Link
-- **Functional Requirements Document** - [https://cebuinstituteoftechnology-my.sharepoint.com/:b:/g/personal/mathlee_biacolo_cit_edu/EQkl7GExwtdLj6NagGnM-uMBoQxGu4KhcKXVUXqQKzx3PQ?e=4zhwcD](https://cebuinstituteoftechnology-my.sharepoint.com/:w:/g/personal/mathlee_biacolo_cit_edu/EY2RvuHGkBpIniwKt_VxC80BF1ppnafqZr7pB4tuzL8lgw?e=hbYGpn)
-- **Gantt Chart** - [https://cebuinstituteoftechnology-my.sharepoint.com/:x:/g/personal/mathlee_biacolo_cit_edu/EfKybpc0szZFo-HltRaQEhQBlNUPJrhNLKNTS-dbVxQ5rg?e=jhDcvw](https://cebuinstituteoftechnology-my.sharepoint.com/:x:/g/personal/mathlee_biacolo_cit_edu/EaftggmRtAlJtaOEl_HQCV0BsWGd86L-pcNUkuhiZlvezw?e=aPP9fi)
-- **System ERD** - https://cebuinstituteoftechnology-my.sharepoint.com/:i:/g/personal/mathlee_biacolo_cit_edu/ETKLOu__3xdOrdkWqURaXLkBgQ0LObOJW2eweg-Bhfj8Rg?e=D5Pftg
-- **UIUX Figma** - https://www.figma.com/design/KxtKGC2RcJdpSmID1ovZs9/Item-Exchange-Platform---Web-Design?node-id=0-1&t=3pNSQjHxgsga2Stx-1
+> See [`requirements.txt`](requirements.txt) for the full dependency list.
 
-  
+## Quick Start
 
-## Technologies Used
+### Prerequisites
 
-  
+- Python 3.10+
+- pip
 
-- Django (Python web framework)
-- MySQL (Database)
-
-  
-
-## Getting Started
-
-  
-
-**1. Clone the repository:**
-
-  
+### Installation
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/MasuRii/SwapSpot.git
+cd SwapSpot
 
-git  clone  https://github.com/MasuRii/ItemExchangeApplication.git
+# 2. Create and activate a virtual environment
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Set up environment variables (see Configuration below)
+cp .env.example .env
+
+# 5. Run database migrations
+python manage.py migrate
+
+# 6. Create a superuser (admin account)
+python manage.py createsuperuser
+
+# 7. Start the development server
+python manage.py runserver
+```
+
+The app will be available at [http://localhost:8000](http://localhost:8000).
+
+### Running Tests
+
+```bash
+python manage.py test
+```
+
+## Configuration
+
+SwapSpot uses real environment variables first, fills any missing values from a project-root `.env` file if it exists, then applies safe development defaults. Copy `.env.example` to `.env` for local customization:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `DJANGO_SECRET_KEY` | Production only | Development-only fallback | Django secret key for cryptographic signing. Set a unique value before deployment. |
+| `DJANGO_DEBUG` | No | `True` | Enables Django debug mode. Set to `False` in production. |
+| `DJANGO_ALLOWED_HOSTS` | When `DJANGO_DEBUG=False` | `""` | Comma-separated list of allowed hostnames. Required in production. |
+
+> ⚠️ **Security:** Production startup fails unless `DJANGO_DEBUG=False` is paired with a unique `DJANGO_SECRET_KEY` and at least one `DJANGO_ALLOWED_HOSTS` entry. Never deploy with the example secret key placeholder.
+
+## Project Structure
+
+```
+SwapSpot/
+├── SwapSpot/                 # Django project settings & configuration
+│   ├── settings.py           # Main settings file
+│   ├── urls.py               # Root URL configuration
+│   └── wsgi.py               # WSGI entry point
+├── exchange/                 # Main application
+│   ├── models.py             # Database models (User, Item, Proposal, etc.)
+│   ├── views.py              # Template views & DRF ViewSets
+│   ├── serializers.py        # DRF serializers
+│   ├── forms.py              # Django forms
+│   ├── signals.py            # Rating average auto-calculation
+│   ├── urls.py               # App URL routes & API router
+│   ├── tests.py              # Test suite
+│   └── migrations/           # Database migrations
+├── templates/exchange/       # HTML templates
+├── static/                   # CSS, JS, images, SVGs
+│   ├── css/
+│   ├── js/
+│   ├── images/
+│   └── svg/
+├── manage.py                 # Django management command
+├── requirements.txt          # Python dependencies
+└── README.md
+```
+
+### URL Routes
+
+| Path | View | Description |
+|---|---|---|
+| `/` | Landing page | Public landing page |
+| `/signup/step1/` | Signup step 1 | Email, username, password |
+| `/signup/step2/` | Signup step 2 | Name, location, terms |
+| `/login/` | Login | Email/password login |
+| `/homepage/` | Home feed | Browse available items |
+| `/profile/<username>/` | User profile | View profile, items, ratings |
+| `/add-item/` | Add item | Create a new listing |
+| `/item/<id>/` | Item detail | View item, see suggestions |
+| `/item/<id>/edit/` | Edit item | Modify your listing |
+| `/items/<id>/delete/` | Delete item | Remove your listing (POST only) |
+| `/settings/` | Profile settings | Edit account details |
+| `/delete-account/` | Delete account | Remove account (POST only) |
+| `/api/` | DRF API root | Browse all API endpoints |
+| `/admin/` | Django admin | Admin interface |
+
+## API
+
+SwapSpot exposes a REST API powered by Django REST Framework. All resource endpoints are available under `/api/`:
+
+| Endpoint | Resource |
+|---|---|
+| `/api/users/` | Users |
+| `/api/items/` | Items |
+| `/api/proposals/` | Exchange/purchase proposals |
+| `/api/transactions/` | Completed transactions |
+| `/api/reviews/` | User reviews |
+| `/api/notifications/` | User notifications |
+| `/api/tags/` | Item tags |
+| `/api/item-tags/` | Item–tag associations |
+| `/api/payment-methods/` | Payment methods |
+| `/api-auth/` | DRF browsable API authentication |
+
+All ViewSets support standard CRUD operations (`list`, `create`, `retrieve`, `update`, `partial_update`, `destroy`).
+
+## Models
+
+| Model | Key Fields | Description |
+|---|---|---|
+| `User` | email, username, profile_picture, average_rating | Custom user model (email as username) |
+| `Item` | title, description, category, condition, price, listing_type | Marketplace listings |
+| `Proposal` | sender, receiver, item, message, status | Exchange/purchase proposals |
+| `Transaction` | proposal, amount, transaction_type | Completed transactions |
+| `Review` | reviewer, reviewee, transaction, rating, comment | Post-transaction reviews |
+| `Rating` | rater, ratee, rating (1–5) | Quick star ratings on profiles |
+| `Notification` | user, content, is_read | In-app notifications |
+| `Tag` / `ItemTag` | name, item, tag | Item categorization |
+| `PaymentMethod` | user, provider, account_details | User payment info |
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions, code style guidelines, and pull request process.
+
+## License
+
+This project does not currently have a license. All rights reserved by default. Contact the maintainers for usage permissions.
