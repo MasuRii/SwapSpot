@@ -1,9 +1,6 @@
 import os
 from pathlib import Path
 
-from django.core.exceptions import ImproperlyConfigured
-import dj_database_url
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_FILE = BASE_DIR / '.env'
@@ -45,10 +42,7 @@ def _get_bool_env(name, default):
         return True
     if normalized in {'0', 'false', 'f', 'no', 'n', 'off'}:
         return False
-
-    raise ImproperlyConfigured(
-        f'{name} must be a boolean value: true or false.'
-    )
+    raise ValueError(f'{name} must be a boolean value: true or false.')
 
 
 def _get_list_env(name):
@@ -63,30 +57,12 @@ _load_env_file(ENV_FILE)
 
 DEBUG = _get_bool_env('DJANGO_DEBUG', default=True)
 
-DEVELOPMENT_SECRET_KEY = 'django-insecure-development-only-change-me'
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '').strip()
-
-if DEBUG and not SECRET_KEY:
-    SECRET_KEY = DEVELOPMENT_SECRET_KEY
-
-if (
-    not DEBUG
-    and SECRET_KEY in {'', 'your-secret-key-here', DEVELOPMENT_SECRET_KEY}
-):
-    raise ImproperlyConfigured(
-        'Set DJANGO_SECRET_KEY to a unique value when DJANGO_DEBUG=False.'
-    )
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-development-only-change-me',
+).strip() or 'django-insecure-development-only-change-me'
 
 ALLOWED_HOSTS = _get_list_env('DJANGO_ALLOWED_HOSTS')
-
-if not DEBUG and not ALLOWED_HOSTS:
-    raise ImproperlyConfigured(
-        'Set DJANGO_ALLOWED_HOSTS to at least one host when DJANGO_DEBUG=False.'
-    )
-
-# Auto-add Render subdomain when running on Render
-if os.environ.get('RENDER'):
-    ALLOWED_HOSTS.append('.onrender.com')
 
 INSTALLED_APPS = [
     'exchange',
@@ -103,7 +79,6 @@ AUTH_USER_MODEL = 'exchange.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -133,11 +108,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'SwapSpot.wsgi.application'
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 MEDIA_URL = '/media/'
@@ -155,19 +129,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-STORAGES = {
-    'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
-    },
-}
 
 LOGIN_URL = '/login/'
-
-# ---- Production security (active only when DEBUG=False) ----
-if not DEBUG:
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = True
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
