@@ -3,225 +3,1131 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SwapSpot — Community Item Exchange &amp; Marketplace</title>
+  <meta name="theme-color" content="#B84217" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1A0E07" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="SwapSpot — a portfolio case study for a community-based item exchange and marketplace, designed and built with Django and DRF.">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SwapSpot — Portfolio Case Study">
+  <meta property="og:description" content="A concept marketplace for swapping, selling, and proposing trades. Designed and built end-to-end with Django and DRF.">
+  <meta property="og:image" content="../static/svg/swapspot-logo-light.svg">
+
+  <title>SwapSpot — Portfolio Case Study</title>
+
+  <link rel="icon" type="image/svg+xml" href="../static/svg/swapspot-icon-light.svg">
+
   <style>
+    /* ─── Reset ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─── Tokens — light ─────────────────────────────────── */
     :root {
-      --orange: #B84217;
-      --orange-light: #FFECDC;
-      --white: #FFFFFF;
-      --gray-50: #F9FAFB;
-      --gray-100: #F3F4F6;
-      --gray-200: #E5E7EB;
-      --gray-600: #4B5563;
-      --gray-700: #374151;
-      --gray-800: #1F2937;
-      --gray-900: #111827;
+      --brand: #B84217;
+      --brand-strong: #8C2F0E;
+      --brand-soft: #FFECDC;
+      --brand-soft-2: #FCD7BB;
+
+      --bg: #FFFBF7;
+      --bg-elev: #FFFFFF;
+      --bg-muted: #F6F1EB;
+      --border: #EADFD2;
+      --border-strong: #D9C8B5;
+
+      --fg: #1A1410;
+      --fg-muted: #5C4A3E;
+      --fg-soft: #7A6655;
+
+      --accent-ring: rgba(184, 66, 23, 0.35);
+      --shadow-sm: 0 1px 2px rgba(60, 30, 10, 0.06), 0 1px 3px rgba(60, 30, 10, 0.04);
+      --shadow-md: 0 6px 24px -8px rgba(60, 30, 10, 0.18), 0 2px 6px rgba(60, 30, 10, 0.06);
+      --shadow-lg: 0 18px 48px -16px rgba(60, 30, 10, 0.28);
+
+      --radius-sm: 0.5rem;
+      --radius-md: 0.85rem;
+      --radius-lg: 1.25rem;
+      --radius-xl: 1.75rem;
+
+      --max: 1120px;
     }
+
+    /* ─── Tokens — dark (system + manual override) ─────── */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --brand: #FF7A45;
+        --brand-strong: #FFA277;
+        --brand-soft: #3B1B0C;
+        --brand-soft-2: #5A2A12;
+
+        --bg: #100804;
+        --bg-elev: #1A100A;
+        --bg-muted: #221610;
+        --border: #2E2018;
+        --border-strong: #3D2A1F;
+
+        --fg: #F8EFE7;
+        --fg-muted: #C9B8A8;
+        --fg-soft: #A08B79;
+
+        --accent-ring: rgba(255, 122, 69, 0.4);
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+        --shadow-md: 0 8px 28px -10px rgba(0, 0, 0, 0.6);
+        --shadow-lg: 0 24px 56px -18px rgba(0, 0, 0, 0.75);
+      }
+    }
+
+    [data-theme="dark"] {
+      --brand: #FF7A45;
+      --brand-strong: #FFA277;
+      --brand-soft: #3B1B0C;
+      --brand-soft-2: #5A2A12;
+      --bg: #100804;
+      --bg-elev: #1A100A;
+      --bg-muted: #221610;
+      --border: #2E2018;
+      --border-strong: #3D2A1F;
+      --fg: #F8EFE7;
+      --fg-muted: #C9B8A8;
+      --fg-soft: #A08B79;
+      --accent-ring: rgba(255, 122, 69, 0.4);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 8px 28px -10px rgba(0, 0, 0, 0.6);
+      --shadow-lg: 0 24px 56px -18px rgba(0, 0, 0, 0.75);
+    }
+
+    [data-theme="light"] {
+      --brand: #B84217;
+      --brand-strong: #8C2F0E;
+      --brand-soft: #FFECDC;
+      --brand-soft-2: #FCD7BB;
+      --bg: #FFFBF7;
+      --bg-elev: #FFFFFF;
+      --bg-muted: #F6F1EB;
+      --border: #EADFD2;
+      --border-strong: #D9C8B5;
+      --fg: #1A1410;
+      --fg-muted: #5C4A3E;
+      --fg-soft: #7A6655;
+      --accent-ring: rgba(184, 66, 23, 0.35);
+      --shadow-sm: 0 1px 2px rgba(60, 30, 10, 0.06), 0 1px 3px rgba(60, 30, 10, 0.04);
+      --shadow-md: 0 6px 24px -8px rgba(60, 30, 10, 0.18), 0 2px 6px rgba(60, 30, 10, 0.06);
+      --shadow-lg: 0 18px 48px -16px rgba(60, 30, 10, 0.28);
+    }
+
+    /* ─── Base ──────────────────────────────────────────────── */
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      color: var(--gray-800);
-      background: var(--white);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+                   "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+                   "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--fg);
+      background: var(--bg);
       line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: "ss01", "cv11";
     }
-    header {
-      background: var(--orange);
-      color: var(--white);
-      text-align: center;
-      padding: 3rem 1.5rem 2.5rem;
+
+    h1, h2, h3, h4 {
+      font-family: ui-serif, Georgia, "Iowan Old Style", "Apple Garamond",
+                   "Times New Roman", serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      line-height: 1.15;
     }
-    header .logo {
-      background: var(--white);
-      display: inline-block;
-      padding: 1.25rem 1.5rem;
-      border-radius: 1.25rem;
-      margin-bottom: 1.5rem;
+
+    p { color: var(--fg-muted); }
+    a { color: var(--brand); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+    a:hover { color: var(--brand-strong); }
+
+    /* Visible, accessible focus styles for all keyboardable controls */
+    :focus-visible {
+      outline: 3px solid var(--accent-ring);
+      outline-offset: 3px;
+      border-radius: 6px;
     }
-    header .logo svg { width: 200px; height: auto; display: block; }
-    header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.5rem; }
-    header p.tagline { font-size: 1.15rem; opacity: 0.9; max-width: 540px; margin: 0 auto; }
-    main { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
-    section { margin-bottom: 2.5rem; }
-    h2 { font-size: 1.45rem; color: var(--orange); margin-bottom: 1rem; border-bottom: 2px solid var(--orange-light); padding-bottom: 0.35rem; }
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
-    .features .card {
-      background: var(--gray-50);
-      border: 1px solid var(--gray-200);
-      border-radius: 0.75rem;
-      padding: 1.25rem 1.25rem 1rem;
+
+    code, pre {
+      font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+      font-size: 0.9em;
     }
-    .features .card h3 { font-size: 1.05rem; margin-bottom: 0.4rem; color: var(--gray-900); }
-    .features .card p { font-size: 0.93rem; color: var(--gray-600); }
-    .stack { display: flex; flex-wrap: wrap; gap: 0.6rem; }
-    .stack .badge {
-      background: var(--orange-light);
-      color: var(--orange);
+
+    code {
+      background: var(--bg-muted);
+      color: var(--fg);
+      padding: 0.12em 0.4em;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* ─── Skip link ────────────────────────────────────────── */
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      padding: 0.6rem 0.95rem;
+      background: var(--brand);
+      color: #FFFFFF;
       font-weight: 600;
-      font-size: 0.88rem;
-      padding: 0.4rem 0.85rem;
-      border-radius: 2rem;
-      white-space: nowrap;
-    }
-    .links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-    .links .btn {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      background: var(--orange);
-      color: var(--white);
+      border-radius: var(--radius-sm);
+      transform: translateY(-150%);
+      transition: transform 0.18s ease;
+      z-index: 100;
       text-decoration: none;
-      padding: 0.6rem 1.3rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: background 0.2s;
     }
-    .links .btn:hover { background: #9A3512; }
-    .links .btn.outline {
+    .skip-link:focus { transform: translateY(0); color: #FFFFFF; }
+
+    /* ─── Top bar ──────────────────────────────────────────── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .topbar-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-weight: 700;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .topbar-mark svg { width: 26px; height: 26px; flex: 0 0 auto; }
+    .topbar-mark:hover { color: var(--brand); }
+    .topbar-nav {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .topbar-nav a {
+      padding: 0.5rem 0.85rem;
+      border-radius: var(--radius-sm);
+      color: var(--fg-muted);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+    .topbar-nav a:hover { color: var(--fg); background: var(--bg-muted); }
+    @media (max-width: 720px) { .topbar-nav a:not(.cta-mini) { display: none; } }
+
+    .cta-mini {
+      background: var(--fg);
+      color: var(--bg) !important;
+      font-weight: 600 !important;
+    }
+    .cta-mini:hover { background: var(--brand) !important; color: #FFFFFF !important; }
+
+    .theme-toggle {
       background: transparent;
-      color: var(--orange);
-      border: 2px solid var(--orange);
+      color: var(--fg-muted);
+      border: 1px solid var(--border);
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
     }
-    .links .btn.outline:hover { background: var(--orange-light); }
-    table { width: 100%; border-collapse: collapse; font-size: 0.93rem; }
-    th, td { padding: 0.6rem 0.8rem; text-align: left; border-bottom: 1px solid var(--gray-200); }
-    th { background: var(--gray-50); font-weight: 600; color: var(--gray-700); }
-    tr:hover td { background: var(--gray-50); }
-    footer {
-      text-align: center;
+    .theme-toggle:hover { color: var(--fg); border-color: var(--border-strong); background: var(--bg-muted); }
+    .theme-toggle svg { width: 18px; height: 18px; }
+    .theme-toggle .icon-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: block; }
+      :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: none; }
+    }
+
+    /* ─── Layout primitives ───────────────────────────────── */
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 1.25rem; }
+    section { padding: 4rem 0; }
+    section + section { border-top: 1px solid var(--border); }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--brand);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 18px;
+      height: 2px;
+      background: var(--brand);
+      display: inline-block;
+    }
+    h2.section-title { font-size: clamp(1.6rem, 3vw, 2.1rem); margin-bottom: 0.5rem; }
+    .section-lead { max-width: 62ch; font-size: 1.02rem; color: var(--fg-muted); }
+
+    /* ─── Hero ─────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 4.5rem 0 5rem;
+      isolation: isolate;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -10% -20% auto -20%;
+      height: 75%;
+      background:
+        radial-gradient(60% 60% at 20% 30%, var(--brand-soft) 0%, transparent 60%),
+        radial-gradient(50% 50% at 85% 20%, var(--brand-soft-2) 0%, transparent 65%),
+        radial-gradient(40% 40% at 60% 80%, color-mix(in srgb, var(--brand) 14%, transparent) 0%, transparent 70%);
+      filter: blur(8px);
+      z-index: -1;
+      opacity: 0.9;
+    }
+    [data-theme="dark"] .hero::before,
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .hero::before {
+        opacity: 0.45;
+      }
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 3rem;
+      align-items: center;
+    }
+    @media (max-width: 880px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-elev);
+      color: var(--fg-muted);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 1.2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .hero-tag .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--brand);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 18%, transparent);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5.4vw, 4rem);
+      letter-spacing: -0.035em;
+      line-height: 1.02;
+      margin-bottom: 1.1rem;
+    }
+    .hero h1 .accent {
+      background: linear-gradient(120deg, var(--brand), var(--brand-strong) 70%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-style: italic;
+    }
+    .hero p.lede {
+      font-size: clamp(1.05rem, 1.5vw, 1.18rem);
+      color: var(--fg-muted);
+      max-width: 56ch;
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.78rem 1.25rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.97rem;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: transform 0.18s ease, background 0.18s ease,
+                  border-color 0.18s ease, color 0.18s ease,
+                  box-shadow 0.18s ease;
+      min-height: 44px;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--fg);
+      color: var(--bg);
+      box-shadow: var(--shadow-md);
+    }
+    .btn-primary:hover { background: var(--brand); color: #FFFFFF; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--fg);
+      border-color: var(--border-strong);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-muted);
+      border-color: var(--fg-muted);
+      color: var(--fg);
+    }
+    .btn svg { width: 16px; height: 16px; }
+
+    /* Hero card / preview */
+    .hero-card {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
       padding: 1.5rem;
-      color: var(--gray-600);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      transform: rotate(-1.2deg);
+    }
+    @media (max-width: 880px) { .hero-card { transform: none; } }
+
+    .hero-card .logo-tile {
+      background: var(--brand-soft);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.1rem;
+    }
+    .hero-card .logo-tile svg { width: min(220px, 100%); height: auto; }
+
+    .hero-card-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+    .meta-item {
+      background: var(--bg-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.7rem 0.85rem;
+    }
+    .meta-item dt {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-soft);
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .meta-item dd { color: var(--fg); font-weight: 600; font-size: 0.92rem; }
+
+    /* ─── Concept disclaimer banner ─────────────────────── */
+    .concept-banner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      color: var(--fg-muted);
+      background: var(--bg-muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-top: 1.25rem;
+    }
+    .concept-banner svg { width: 18px; height: 18px; flex: 0 0 auto; color: var(--brand); margin-top: 1px; }
+    .concept-banner strong { color: var(--fg); }
+
+    /* ─── Stats strip ──────────────────────────────────────── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-elev);
+    }
+    .stats div {
+      padding: 1.5rem 1.25rem;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+    .stats div:last-child { border-right: 0; }
+    .stats .value {
+      font-family: ui-serif, Georgia, serif;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      color: var(--brand);
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+    .stats .label {
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-soft);
+      font-weight: 600;
+      margin-top: 0.3rem;
+    }
+    @media (max-width: 720px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stats div { border-right: 0; border-bottom: 1px solid var(--border); }
+      .stats div:nth-child(2n) { border-right: 0; }
+      .stats div:nth-last-child(-n+2) { border-bottom: 0; }
+      .stats div:nth-child(odd) { border-right: 1px solid var(--border); }
+    }
+
+    /* ─── Two-col: problem + approach ───────────────────── */
+    .twocol {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+    @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; gap: 2rem; } }
+
+    .twocol article h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .twocol article h3 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      font-weight: 700;
       font-size: 0.85rem;
-      border-top: 1px solid var(--gray-200);
+    }
+    .twocol article p { font-size: 1rem; }
+    .twocol article ul {
+      list-style: none;
+      margin-top: 0.85rem;
+      display: grid;
+      gap: 0.5rem;
+    }
+    .twocol article li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      color: var(--fg-muted);
+      font-size: 0.95rem;
+    }
+    .twocol article li::before {
+      content: "";
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--brand);
+      margin-top: 0.55rem;
+      flex: 0 0 auto;
+    }
+
+    /* ─── Feature grid ─────────────────────────────────────── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .feature-card {
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem 1.3rem 1.3rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .feature-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+      box-shadow: var(--shadow-md);
+    }
+    .feature-card .ico {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.85rem;
+    }
+    .feature-card .ico svg { width: 20px; height: 20px; }
+    .feature-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 0.4rem;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: -0.005em;
+    }
+    .feature-card p { font-size: 0.93rem; color: var(--fg-muted); }
+
+    /* ─── Tech stack ───────────────────────────────────────── */
+    .stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+    .badge {
+      background: var(--bg-elev);
+      color: var(--fg);
+      border: 1px solid var(--border);
+      font-weight: 500;
+      font-size: 0.86rem;
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .badge .key { color: var(--fg-soft); font-weight: 500; }
+    .badge .val { color: var(--brand); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .badge:hover { border-color: var(--border-strong); }
+
+    /* ─── API table ────────────────────────────────────────── */
+    .table-wrap {
+      margin-top: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--bg-elev);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.93rem; }
+    thead th {
+      background: var(--bg-muted);
+      text-align: left;
+      padding: 0.85rem 1rem;
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--fg-soft);
+      border-bottom: 1px solid var(--border);
+    }
+    tbody td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--fg);
+    }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover td { background: color-mix(in srgb, var(--brand-soft) 35%, transparent); }
+    td code { font-size: 0.86em; }
+
+    .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    /* ─── Architecture diagram ─────────────────────────── */
+    .arch {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .arch-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.75rem;
+    }
+    @media (max-width: 720px) { .arch-grid { grid-template-columns: 1fr; } }
+    .arch-node {
+      background: var(--bg-muted);
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      text-align: center;
+    }
+    .arch-node strong {
+      display: block;
+      color: var(--brand);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+    .arch-node span {
+      font-size: 0.88rem;
+      color: var(--fg-muted);
+      display: block;
+      line-height: 1.45;
+    }
+    .arch-arrow {
+      text-align: center;
+      color: var(--fg-soft);
+      font-size: 0.85rem;
+      margin: 0.6rem 0;
+    }
+
+    /* ─── CTA strip ────────────────────────────────────────── */
+    .cta {
+      background: var(--fg);
+      color: var(--bg);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem 1.75rem;
+      margin: 2rem 0 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -50% -10%;
+      height: 80%;
+      background: radial-gradient(50% 80% at 50% 0%, color-mix(in srgb, var(--brand) 38%, transparent), transparent 70%);
+      pointer-events: none;
+    }
+    .cta h2 { color: var(--bg); font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 0.6rem; }
+    .cta p { color: color-mix(in srgb, var(--bg) 75%, transparent); margin: 0 auto 1.5rem; max-width: 52ch; }
+    .cta .hero-actions { justify-content: center; }
+    .cta .btn-primary { background: var(--brand); color: #FFFFFF; }
+    .cta .btn-primary:hover { background: var(--brand-strong); }
+    .cta .btn-secondary { color: var(--bg); border-color: color-mix(in srgb, var(--bg) 30%, transparent); }
+    .cta .btn-secondary:hover { background: color-mix(in srgb, var(--bg) 10%, transparent); border-color: color-mix(in srgb, var(--bg) 60%, transparent); color: var(--bg); }
+
+    /* ─── Footer ───────────────────────────────────────────── */
+    footer {
+      padding: 2.5rem 1.25rem;
+      color: var(--fg-soft);
+      font-size: 0.86rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    footer .foot-grid {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    footer a { color: var(--fg-muted); text-decoration: none; }
+    footer a:hover { color: var(--brand); }
+
+    /* High contrast preference */
+    @media (prefers-contrast: more) {
+      :root {
+        --border: #1A1410;
+        --border-strong: #1A1410;
+        --fg-muted: #1A1410;
+      }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">
-    <!-- SwapSpot logo (light variant) -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 40" aria-label="SwapSpot Logo">
-      <defs>
-        <clipPath id="squareClip">
-          <rect x="0" y="0" width="40" height="40" rx="15" />
-        </clipPath>
-      </defs>
-      <g clip-path="url(#squareClip)">
-        <rect x="0" y="0" width="40" height="40" fill="#FFECDC" />
-        <g transform="translate(20 20)">
-          <g transform="scale(0.08)">
-            <g transform="translate(-128 -128)">
-              <path d="M216,64v90.93c0,46.2-36.85,84.55-83,85.06A83.71,83.71,0,0,1,72.6,215.4C50.79,192.33,26.15,136,26.15,136a16,16,0,0,1,6.53-22.23c7.66-4,17.1-.84,21.4,6.62l21,36.44a6.09,6.09,0,0,0,6,3.09l.12,0A8.19,8.19,0,0,0,88,151.74V48a16,16,0,0,1,16.77-16c8.61.4,15.23,7.82,15.23,16.43V112a8,8,0,0,0,8.53,8,8.17,8.17,0,0,0,7.47-8.25V32a16,16,0,0,1,16.77-16c8.61.4,15.23,7.82,15.23,16.43V120a8,8,0,0,0,8.53,8,8.17,8.17,0,0,0,7.47-8.25V64.45c0-8.61,6.62-16,15.23-16.43A16,16,0,0,1,216,64Z" fill="#B84217"/>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ─── Top bar ─────────────────────────────────────────── -->
+  <header class="topbar" role="banner">
+    <div class="topbar-inner">
+      <a class="topbar-mark" href="#top" aria-label="SwapSpot — back to top">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+          <defs>
+            <clipPath id="markClip"><rect x="0" y="0" width="40" height="40" rx="11"/></clipPath>
+          </defs>
+          <g clip-path="url(#markClip)">
+            <rect x="0" y="0" width="40" height="40" fill="var(--brand-soft)"/>
+            <g transform="translate(20 20) scale(0.08) translate(-128 -128)">
+              <path fill="var(--brand)" d="M216,64v90.93c0,46.2-36.85,84.55-83,85.06A83.71,83.71,0,0,1,72.6,215.4C50.79,192.33,26.15,136,26.15,136a16,16,0,0,1,6.53-22.23c7.66-4,17.1-.84,21.4,6.62l21,36.44a6.09,6.09,0,0,0,6,3.09l.12,0A8.19,8.19,0,0,0,88,151.74V48a16,16,0,0,1,16.77-16c8.61.4,15.23,7.82,15.23,16.43V112a8,8,0,0,0,8.53,8,8.17,8.17,0,0,0,7.47-8.25V32a16,16,0,0,1,16.77-16c8.61.4,15.23,7.82,15.23,16.43V120a8,8,0,0,0,8.53,8,8.17,8.17,0,0,0,7.47-8.25V64.45c0-8.61,6.62-16,15.23-16.43A16,16,0,0,1,216,64Z"/>
             </g>
           </g>
-        </g>
-      </g>
-      <path fill="#B84217" d="M52.22 29.29L52.22 29.29Q50.50 29.29 49.08 28.68Q47.66 28.06 46.84 26.88Q46.01 25.69 45.98 23.94L45.98 23.94L48.84 23.94Q48.86 25.28 49.78 26.13Q50.69 26.98 52.20 26.98L52.20 26.98Q53.54 26.98 54.36 26.36Q55.18 25.74 55.18 24.61L55.18 24.61Q55.18 23.96 54.96 23.52Q54.74 23.07 54.24 22.72Q53.74 22.38 52.90 22.05Q52.06 21.73 50.76 21.30L50.76 21.30Q49.25 20.79 48.29 20.13Q47.33 19.47 46.88 18.60Q46.44 17.72 46.44 16.64L46.44 16.64Q46.44 15.10 47.17 14.05Q47.90 12.99 49.16 12.45Q50.42 11.91 51.96 11.91L51.96 11.91Q53.52 11.91 54.77 12.46Q56.02 13.02 56.78 14.08Q57.55 15.15 57.58 16.69L57.58 16.69L54.67 16.69Q54.67 15.66 53.90 14.94Q53.14 14.22 51.86 14.22L51.86 14.22Q50.78 14.19 50.03 14.77Q49.27 15.34 49.27 16.45L49.27 16.45Q49.27 17.22 49.76 17.72Q50.26 18.22 51.17 18.61Q52.08 18.99 53.38 19.45L53.38 19.45Q54.17 19.71 55.00 20.07Q55.82 20.43 56.51 21.00Q57.19 21.56 57.62 22.39Q58.06 23.22 58.06 24.44L58.06 24.44Q58.06 25.95 57.28 27.04Q56.50 28.14 55.18 28.71Q53.86 29.29 52.22 29.29ZM64.42 29L61.51 29L57.98 17.10L60.72 17.10L62.98 26.24L65.45 17.10L68.38 17.10L70.80 26.22L73.06 17.10L75.70 17.10L72.19 28.98L69.31 28.98L66.86 20.17L64.42 29ZM79.08 29.29L79.08 29.29Q77.98 29.29 77.03 28.87Q76.08 28.45 75.52 27.63Q74.95 26.82 74.95 25.69L74.95 25.69Q74.95 24.34 75.62 23.50Q76.30 22.66 77.45 22.27Q78.60 21.87 79.99 21.87L79.99 21.87L82.97 21.87Q82.97 20.91 82.66 20.30Q82.34 19.69 81.79 19.39Q81.24 19.09 80.50 19.09L80.50 19.09Q79.54 19.09 78.82 19.52Q78.10 19.95 77.93 20.94L77.93 20.94L75.19 20.94Q75.31 19.64 76.07 18.72Q76.82 17.79 78 17.30Q79.18 16.81 80.52 16.81L80.52 16.81Q82.25 16.81 83.39 17.44Q84.53 18.08 85.12 19.21Q85.70 20.34 85.70 21.82L85.70 21.82L85.70 25.45Q85.73 26.10 86.03 26.38Q86.33 26.67 86.98 26.70L86.98 26.70L86.98 29Q85.97 29 85.25 28.78Q84.53 28.57 84.06 28.14Q83.59 27.70 83.30 27.01L83.30 27.01Q82.73 27.97 81.61 28.63Q80.50 29.29 79.08 29.29ZM79.78 27.08L79.78 27.08Q80.71 27.08 81.42 26.64Q82.13 26.19 82.55 25.44Q82.97 24.68 82.97 23.77L82.97 23.77L82.97 23.70L80.18 23.70Q79.56 23.70 78.98 23.86Q78.41 24.03 78.07 24.40Q77.74 24.78 77.74 25.42L77.74 25.42Q77.74 26.29 78.34 26.68Q78.94 27.08 79.78 27.08ZM90.29 34.28L87.58 34.28L87.58 17.10L90.22 17.10L90.29 18.85Q90.94 17.94 91.99 17.37Q93.05 16.81 94.42 16.81L94.42 16.81Q96.17 16.81 97.43 17.64Q98.69 18.46 99.37 19.88Q100.06 21.30 100.06 23.02L100.06 23.02Q100.06 24.75 99.36 26.18Q98.66 27.61 97.40 28.45Q96.14 29.29 94.39 29.29L94.39 29.29Q92.90 29.29 91.86 28.68Q90.82 28.06 90.29 27.25L90.29 27.25L90.29 34.28ZM93.79 26.91L93.79 26.91Q94.82 26.91 95.62 26.40Q96.41 25.88 96.85 24.99Q97.30 24.10 97.30 23.02L97.30 23.02Q97.30 21.85 96.83 20.98Q96.36 20.12 95.57 19.65Q94.78 19.18 93.79 19.18L93.79 19.18Q92.78 19.18 91.99 19.68Q91.20 20.17 90.74 21.04Q90.29 21.92 90.29 23.05L90.29 23.05Q90.29 24.13 90.73 25.00Q91.18 25.88 91.96 26.40Q92.74 26.91 93.79 26.91ZM106.92 29.29L106.92 29.29Q105.19 29.29 103.78 28.68Q102.36 28.06 101.53 26.88Q100.70 25.69 100.68 23.94L100.68 23.94L103.54 23.94Q103.56 25.28 104.47 26.13Q105.38 26.98 106.90 26.98L106.90 26.98Q108.24 26.98 109.06 26.36Q109.87 25.74 109.87 24.61L109.87 24.61Q109.87 23.96 109.66 23.52Q109.44 23.07 108.94 22.72Q108.43 22.38 107.59 22.05Q106.75 21.73 105.46 21.30L105.46 21.30Q103.94 20.79 102.98 20.13Q102.02 19.47 101.58 18.60Q101.14 17.72 101.14 16.64L101.14 16.64Q101.14 15.10 101.87 14.05Q102.60 12.99 103.86 12.45Q105.12 11.91 106.66 11.91L106.66 11.91Q108.22 11.91 109.46 12.46Q110.71 13.02 111.48 14.08Q112.25 15.15 112.27 16.69L112.27 16.69L109.37 16.69Q109.37 15.66 108.60 14.94Q107.83 14.22 106.56 14.22L106.56 14.22Q105.48 14.19 104.72 14.77Q103.97 15.34 103.97 16.45L103.97 16.45Q103.97 17.22 104.46 17.72Q104.95 18.22 105.86 18.61Q106.78 18.99 108.07 19.45L108.07 19.45Q108.86 19.71 109.69 20.07Q110.52 20.43 111.20 21.00Q111.89 21.56 112.32 22.39Q112.75 23.22 112.75 24.44L112.75 24.44Q112.75 25.95 111.97 27.04Q111.19 28.14 109.87 28.71Q108.55 29.29 106.92 29.29ZM116.52 34.28L113.81 34.28L113.81 17.10L116.45 17.10L116.52 18.85Q117.17 17.94 118.22 17.37Q119.28 16.81 120.65 16.81L120.65 16.81Q122.40 16.81 123.66 17.64Q124.92 18.46 125.60 19.88Q126.29 21.30 126.29 23.02L126.29 23.02Q126.29 24.75 125.59 26.18Q124.90 27.61 123.64 28.45Q122.38 29.29 120.62 29.29L120.62 29.29Q119.14 29.29 118.09 28.68Q117.05 28.06 116.52 27.25L116.52 27.25L116.52 34.28ZM120.02 26.91L120.02 26.91Q121.06 26.91 121.85 26.40Q122.64 25.88 123.08 24.99Q123.53 24.10 123.53 23.02L123.53 23.02Q123.53 21.85 123.06 20.98Q122.59 20.12 121.80 19.65Q121.01 19.18 120.02 19.18L120.02 19.18Q119.02 19.18 118.22 19.68Q117.43 20.17 116.98 21.04Q116.52 21.92 116.52 23.05L116.52 23.05Q116.52 24.13 116.96 25.00Q117.41 25.88 118.19 26.40Q118.97 26.91 120.02 26.91ZM132.91 29.29L132.91 29.29Q131.16 29.29 129.77 28.52Q128.38 27.75 127.57 26.35Q126.77 24.94 126.77 23.05L126.77 23.05Q126.77 21.10 127.61 19.71Q128.45 18.32 129.86 17.56Q131.28 16.81 133.01 16.81L133.01 16.81Q134.76 16.81 136.16 17.56Q137.57 18.32 138.40 19.71Q139.22 21.10 139.22 23.05L139.22 23.05Q139.22 24.85 138.42 26.26Q137.62 27.68 136.19 28.48Q134.76 29.29 132.91 29.29ZM132.94 26.94L132.94 26.94Q133.97 26.94 134.75 26.42Q135.53 25.90 135.98 25.02Q136.44 24.13 136.44 23L136.44 23Q136.44 21.82 135.98 20.96Q135.53 20.10 134.75 19.63Q133.97 19.16 132.96 19.16L132.96 19.16Q131.90 19.16 131.12 19.66Q130.34 20.17 129.94 21.04Q129.53 21.92 129.53 23.05L129.53 23.05Q129.53 24.27 130.00 25.15Q130.46 26.02 131.24 26.48Q132.02 26.94 132.94 26.94ZM146.23 29L144.34 29Q142.51 29 141.55 28.11Q140.59 27.22 140.59 25.28L140.59 25.28L140.59 19.38L138.89 19.38L138.89 17.10L140.59 17.10L140.59 14.22L143.33 14.22L143.33 17.10L146.23 17.10L146.23 19.38L143.33 19.38L143.33 25.30Q143.33 26.12 143.71 26.42Q144.10 26.72 144.86 26.72L144.86 26.72L146.23 26.72L146.23 29Z"/>
-    </svg>
-  </div>
-  <h1>SwapSpot</h1>
-  <p class="tagline">A community-based item exchange and marketplace platform built with Django.</p>
-</header>
-
-<main>
-  <section>
-    <h2>About</h2>
-    <p>SwapSpot is a hybrid marketplace where users can list items for sale, propose exchanges (barter), or combine both. It supports user profiles, item discovery, proposal negotiation, reviews, and notifications — all through a Django-powered web application with a REST API.</p>
-  </section>
-
-  <section>
-    <h2>Features</h2>
-    <div class="features">
-      <div class="card">
-        <h3>👤 User Registration &amp; Profiles</h3>
-        <p>Two-step signup, profile editing, avatar uploads, and average rating display.</p>
-      </div>
-      <div class="card">
-        <h3>📦 Item Listings</h3>
-        <p>Create, edit, and delete items with title, description, category, condition, price, and photo.</p>
-      </div>
-      <div class="card">
-        <h3>🔍 Search &amp; Browse</h3>
-        <p>Keyword search, category filtering, and a homepage feed of available items.</p>
-      </div>
-      <div class="card">
-        <h3>🤝 Proposal System</h3>
-        <p>Send, accept, or reject exchange and purchase proposals between users.</p>
-      </div>
-      <div class="card">
-        <h3>⭐ Rating &amp; Reviews</h3>
-        <p>5-star ratings with automatic average calculation via Django signals.</p>
-      </div>
-      <div class="card">
-        <h3>🔔 Notifications</h3>
-        <p>In-app notification system for transaction and proposal updates.</p>
-      </div>
-      <div class="card">
-        <h3>🌐 REST API</h3>
-        <p>Full CRUD endpoints for all models via Django REST Framework ViewSets.</p>
-      </div>
-      <div class="card">
-        <h3>🔄 CI/CD</h3>
-        <p>Automated Django checks and tests on every commit; GitHub Pages deployed from main.</p>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>Tech Stack</h2>
-    <div class="stack">
-      <span class="badge">Python 3.13</span>
-      <span class="badge">Django 6.0.5</span>
-      <span class="badge">DRF 3.17.1</span>
-      <span class="badge">SQLite3</span>
-      <span class="badge">Pillow 12.2.0</span>
-      <span class="badge">GitHub Actions</span>
-    </div>
-  </section>
-
-  <section>
-    <h2>API Endpoints</h2>
-    <table>
-      <thead>
-        <tr><th>Endpoint</th><th>Resource</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>/api/users/</code></td><td>Users</td></tr>
-        <tr><td><code>/api/items/</code></td><td>Items</td></tr>
-        <tr><td><code>/api/proposals/</code></td><td>Exchange/purchase proposals</td></tr>
-        <tr><td><code>/api/transactions/</code></td><td>Completed transactions</td></tr>
-        <tr><td><code>/api/reviews/</code></td><td>User reviews</td></tr>
-        <tr><td><code>/api/notifications/</code></td><td>User notifications</td></tr>
-        <tr><td><code>/api/tags/</code></td><td>Item tags</td></tr>
-        <tr><td><code>/api/item-tags/</code></td><td>Item–tag associations</td></tr>
-        <tr><td><code>/api/payment-methods/</code></td><td>Payment methods</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Links</h2>
-    <div class="links">
-      <a class="btn" href="https://github.com/MasuRii/SwapSpot" target="_blank" rel="noopener">📂 GitHub Repository</a>
-      <a class="btn outline" href="https://github.com/MasuRii/SwapSpot#readme" target="_blank" rel="noopener">📖 README</a>
-      <a class="btn outline" href="https://github.com/MasuRii/SwapSpot/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">🤝 Contributing</a>
-      <a class="btn outline" href="https://github.com/MasuRii/SwapSpot/blob/main/CHANGELOG.md" target="_blank" rel="noopener">📝 Changelog</a>
-    </div>
-  </section>
-
-  <section>
-    <h2>CI/CD Status</h2>
-    <p>Every push and pull request runs Django system checks and the test suite. Merges to <code>main</code> automatically deploy this GitHub Pages site.</p>
-    <p style="margin-top:0.75rem;">
-      <a href="https://github.com/MasuRii/SwapSpot/actions" target="_blank" rel="noopener">
-        <img src="https://github.com/MasuRii/SwapSpot/actions/workflows/ci-cd.yml/badge.svg" alt="CI/CD status badge" style="max-width:100%;">
+        </svg>
+        <span>SwapSpot</span>
       </a>
-    </p>
-  </section>
-</main>
 
-<footer>
-  SwapSpot &copy; 2026 &mdash; Built with Django &amp; deployed via GitHub Pages
-</footer>
+      <nav class="topbar-nav" aria-label="Primary">
+        <a href="#overview">Overview</a>
+        <a href="#features">Features</a>
+        <a href="#stack">Stack</a>
+        <a href="#api">API</a>
+        <a href="#models">Data&nbsp;Model</a>
+        <a class="cta-mini" href="https://github.com/MasuRii/SwapSpot" rel="noopener" target="_blank">View Repo ↗</a>
+        <button
+          class="theme-toggle"
+          type="button"
+          aria-label="Toggle color theme"
+          aria-pressed="false"
+          data-theme-toggle
+        >
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- ─── Hero ──────────────────────────────────────────── -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="hero-tag">
+            <span class="dot" aria-hidden="true"></span>
+            Portfolio Case Study · Concept Project
+          </span>
+
+          <h1 id="hero-title">
+            A community marketplace for people who would
+            <span class="accent">rather swap than scroll.</span>
+          </h1>
+
+          <p class="lede">
+            SwapSpot is a designed-and-built concept for a hybrid item exchange where
+            users can list goods, propose trades, mix barter with cash, and rate each
+            other after a successful transaction. This page walks through the
+            architecture, scope, and implementation as a code-review-ready portfolio piece.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://github.com/MasuRii/SwapSpot" target="_blank" rel="noopener">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 .5C5.65.5.5 5.65.5 12.02c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.24 3.35.95.1-.74.4-1.24.73-1.53-2.55-.29-5.23-1.27-5.23-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.17a10.93 10.93 0 0 1 5.74 0c2.19-1.48 3.15-1.17 3.15-1.17.62 1.58.23 2.75.11 3.04.74.8 1.18 1.82 1.18 3.07 0 4.4-2.69 5.36-5.25 5.65.41.36.78 1.06.78 2.13 0 1.54-.01 2.78-.01 3.16 0 .31.21.66.79.55C20.21 21.4 23.5 17.1 23.5 12.02 23.5 5.65 18.35.5 12 .5z"/></svg>
+              View on GitHub
+            </a>
+            <a class="btn btn-secondary" href="#overview">
+              Read the case study
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+            </a>
+          </div>
+
+          <div class="concept-banner" role="note">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <span>
+              <strong>Heads up:</strong>
+              SwapSpot is a portfolio concept. There is no live backend, public sign-up, or
+              hosted database. The full Django source is available on GitHub for review and local run.
+            </span>
+          </div>
+        </div>
+
+        <aside class="hero-card" aria-label="Project at a glance">
+          <div class="logo-tile">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 170 40" aria-label="SwapSpot logo">
+              <defs>
+                <clipPath id="squareClip"><rect x="0" y="0" width="40" height="40" rx="15"/></clipPath>
+              </defs>
+              <g clip-path="url(#squareClip)">
+                <rect x="0" y="0" width="40" height="40" fill="#FFECDC"/>
+                <g transform="translate(20 20) scale(0.08) translate(-128 -128)">
+                  <path fill="#B84217" d="M216,64v90.93c0,46.2-36.85,84.55-83,85.06A83.71,83.71,0,0,1,72.6,215.4C50.79,192.33,26.15,136,26.15,136a16,16,0,0,1,6.53-22.23c7.66-4,17.1-.84,21.4,6.62l21,36.44a6.09,6.09,0,0,0,6,3.09l.12,0A8.19,8.19,0,0,0,88,151.74V48a16,16,0,0,1,16.77-16c8.61.4,15.23,7.82,15.23,16.43V112a8,8,0,0,0,8.53,8,8.17,8.17,0,0,0,7.47-8.25V32a16,16,0,0,1,16.77-16c8.61.4,15.23,7.82,15.23,16.43V120a8,8,0,0,0,8.53,8,8.17,8.17,0,0,0,7.47-8.25V64.45c0-8.61,6.62-16,15.23-16.43A16,16,0,0,1,216,64Z"/>
+                </g>
+              </g>
+              <path fill="#B84217" d="M52.22 29.29Q50.50 29.29 49.08 28.68Q47.66 28.06 46.84 26.88Q46.01 25.69 45.98 23.94L48.84 23.94Q48.86 25.28 49.78 26.13Q50.69 26.98 52.20 26.98Q53.54 26.98 54.36 26.36Q55.18 25.74 55.18 24.61Q55.18 23.96 54.96 23.52Q54.74 23.07 54.24 22.72Q53.74 22.38 52.90 22.05Q52.06 21.73 50.76 21.30Q49.25 20.79 48.29 20.13Q47.33 19.47 46.88 18.60Q46.44 17.72 46.44 16.64Q46.44 15.10 47.17 14.05Q47.90 12.99 49.16 12.45Q50.42 11.91 51.96 11.91Q53.52 11.91 54.77 12.46Q56.02 13.02 56.78 14.08Q57.55 15.15 57.58 16.69L54.67 16.69Q54.67 15.66 53.90 14.94Q53.14 14.22 51.86 14.22Q50.78 14.19 50.03 14.77Q49.27 15.34 49.27 16.45Q49.27 17.22 49.76 17.72Q50.26 18.22 51.17 18.61Q52.08 18.99 53.38 19.45Q54.17 19.71 55.00 20.07Q55.82 20.43 56.51 21.00Q57.19 21.56 57.62 22.39Q58.06 23.22 58.06 24.44Q58.06 25.95 57.28 27.04Q56.50 28.14 55.18 28.71Q53.86 29.29 52.22 29.29ZM64.42 29L61.51 29L57.98 17.10L60.72 17.10L62.98 26.24L65.45 17.10L68.38 17.10L70.80 26.22L73.06 17.10L75.70 17.10L72.19 28.98L69.31 28.98L66.86 20.17L64.42 29ZM79.08 29.29Q77.98 29.29 77.03 28.87Q76.08 28.45 75.52 27.63Q74.95 26.82 74.95 25.69Q74.95 24.34 75.62 23.50Q76.30 22.66 77.45 22.27Q78.60 21.87 79.99 21.87L82.97 21.87Q82.97 20.91 82.66 20.30Q82.34 19.69 81.79 19.39Q81.24 19.09 80.50 19.09Q79.54 19.09 78.82 19.52Q78.10 19.95 77.93 20.94L75.19 20.94Q75.31 19.64 76.07 18.72Q76.82 17.79 78 17.30Q79.18 16.81 80.52 16.81Q82.25 16.81 83.39 17.44Q84.53 18.08 85.12 19.21Q85.70 20.34 85.70 21.82L85.70 25.45Q85.73 26.10 86.03 26.38Q86.33 26.67 86.98 26.70L86.98 29Q85.97 29 85.25 28.78Q84.53 28.57 84.06 28.14Q83.59 27.70 83.30 27.01Q82.73 27.97 81.61 28.63Q80.50 29.29 79.08 29.29ZM79.78 27.08Q80.71 27.08 81.42 26.64Q82.13 26.19 82.55 25.44Q82.97 24.68 82.97 23.77L82.97 23.70L80.18 23.70Q79.56 23.70 78.98 23.86Q78.41 24.03 78.07 24.40Q77.74 24.78 77.74 25.42Q77.74 26.29 78.34 26.68Q78.94 27.08 79.78 27.08ZM90.29 34.28L87.58 34.28L87.58 17.10L90.22 17.10L90.29 18.85Q90.94 17.94 91.99 17.37Q93.05 16.81 94.42 16.81Q96.17 16.81 97.43 17.64Q98.69 18.46 99.37 19.88Q100.06 21.30 100.06 23.02Q100.06 24.75 99.36 26.18Q98.66 27.61 97.40 28.45Q96.14 29.29 94.39 29.29Q92.90 29.29 91.86 28.68Q90.82 28.06 90.29 27.25L90.29 34.28ZM93.79 26.91Q94.82 26.91 95.62 26.40Q96.41 25.88 96.85 24.99Q97.30 24.10 97.30 23.02Q97.30 21.85 96.83 20.98Q96.36 20.12 95.57 19.65Q94.78 19.18 93.79 19.18Q92.78 19.18 91.99 19.68Q91.20 20.17 90.74 21.04Q90.29 21.92 90.29 23.05Q90.29 24.13 90.73 25.00Q91.18 25.88 91.96 26.40Q92.74 26.91 93.79 26.91ZM106.92 29.29Q105.19 29.29 103.78 28.68Q102.36 28.06 101.53 26.88Q100.70 25.69 100.68 23.94L103.54 23.94Q103.56 25.28 104.47 26.13Q105.38 26.98 106.90 26.98Q108.24 26.98 109.06 26.36Q109.87 25.74 109.87 24.61Q109.87 23.96 109.66 23.52Q109.44 23.07 108.94 22.72Q108.43 22.38 107.59 22.05Q106.75 21.73 105.46 21.30Q103.94 20.79 102.98 20.13Q102.02 19.47 101.58 18.60Q101.14 17.72 101.14 16.64Q101.14 15.10 101.87 14.05Q102.60 12.99 103.86 12.45Q105.12 11.91 106.66 11.91Q108.22 11.91 109.46 12.46Q110.71 13.02 111.48 14.08Q112.25 15.15 112.27 16.69L109.37 16.69Q109.37 15.66 108.60 14.94Q107.83 14.22 106.56 14.22Q105.48 14.19 104.72 14.77Q103.97 15.34 103.97 16.45Q103.97 17.22 104.46 17.72Q104.95 18.22 105.86 18.61Q106.78 18.99 108.07 19.45Q108.86 19.71 109.69 20.07Q110.52 20.43 111.20 21.00Q111.89 21.56 112.32 22.39Q112.75 23.22 112.75 24.44Q112.75 25.95 111.97 27.04Q111.19 28.14 109.87 28.71Q108.55 29.29 106.92 29.29ZM116.52 34.28L113.81 34.28L113.81 17.10L116.45 17.10L116.52 18.85Q117.17 17.94 118.22 17.37Q119.28 16.81 120.65 16.81Q122.40 16.81 123.66 17.64Q124.92 18.46 125.60 19.88Q126.29 21.30 126.29 23.02Q126.29 24.75 125.59 26.18Q124.90 27.61 123.64 28.45Q122.38 29.29 120.62 29.29Q119.14 29.29 118.09 28.68Q117.05 28.06 116.52 27.25L116.52 34.28ZM120.02 26.91Q121.06 26.91 121.85 26.40Q122.64 25.88 123.08 24.99Q123.53 24.10 123.53 23.02Q123.53 21.85 123.06 20.98Q122.59 20.12 121.80 19.65Q121.01 19.18 120.02 19.18Q119.02 19.18 118.22 19.68Q117.43 20.17 116.98 21.04Q116.52 21.92 116.52 23.05Q116.52 24.13 116.96 25.00Q117.41 25.88 118.19 26.40Q118.97 26.91 120.02 26.91ZM132.91 29.29Q131.16 29.29 129.77 28.52Q128.38 27.75 127.57 26.35Q126.77 24.94 126.77 23.05Q126.77 21.10 127.61 19.71Q128.45 18.32 129.86 17.56Q131.28 16.81 133.01 16.81Q134.76 16.81 136.16 17.56Q137.57 18.32 138.40 19.71Q139.22 21.10 139.22 23.05Q139.22 24.85 138.42 26.26Q137.62 27.68 136.19 28.48Q134.76 29.29 132.91 29.29ZM132.94 26.94Q133.97 26.94 134.75 26.42Q135.53 25.90 135.98 25.02Q136.44 24.13 136.44 23Q136.44 21.82 135.98 20.96Q135.53 20.10 134.75 19.63Q133.97 19.16 132.96 19.16Q131.90 19.16 131.12 19.66Q130.34 20.17 129.94 21.04Q129.53 21.92 129.53 23.05Q129.53 24.27 130.00 25.15Q130.46 26.02 131.24 26.48Q132.02 26.94 132.94 26.94ZM146.23 29L144.34 29Q142.51 29 141.55 28.11Q140.59 27.22 140.59 25.28L140.59 19.38L138.89 19.38L138.89 17.10L140.59 17.10L140.59 14.22L143.33 14.22L143.33 17.10L146.23 17.10L146.23 19.38L143.33 19.38L143.33 25.30Q143.33 26.12 143.71 26.42Q144.10 26.72 144.86 26.72L146.23 26.72L146.23 29Z"/>
+            </svg>
+          </div>
+          <dl class="hero-card-meta">
+            <div class="meta-item"><dt>Type</dt><dd>Portfolio Concept</dd></div>
+            <div class="meta-item"><dt>Role</dt><dd>Design &amp; Engineering</dd></div>
+            <div class="meta-item"><dt>Stack</dt><dd>Django · DRF</dd></div>
+            <div class="meta-item"><dt>Status</dt><dd>Source-only Demo</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ─── Stats strip ──────────────────────────────────── -->
+    <div class="stats" aria-label="Project at a glance">
+      <div><div class="value">9</div><div class="label">REST Resources</div></div>
+      <div><div class="value">10+</div><div class="label">Django Models</div></div>
+      <div><div class="value">2</div><div class="label">Step Signup Flow</div></div>
+      <div><div class="value">100%</div><div class="label">Source Available</div></div>
+    </div>
+
+    <!-- ─── Overview / Problem & Approach ────────────────── -->
+    <section id="overview" aria-labelledby="overview-title">
+      <div class="wrap">
+        <span class="eyebrow">Case Study</span>
+        <h2 id="overview-title" class="section-title">The problem, and how SwapSpot answers it.</h2>
+        <p class="section-lead">
+          Most marketplaces force a choice: you either sell, or you trade. SwapSpot
+          imagines a single surface where neighbors can do either, or both — and
+          actually trust each other afterwards.
+        </p>
+
+        <div class="twocol" style="margin-top:2rem;">
+          <article>
+            <h3><span class="num" aria-hidden="true">1</span>The problem</h3>
+            <p>People accumulate things they no longer need. Selling them outright is friction-heavy, and pure barter platforms struggle when one side wants cash and the other wants goods.</p>
+            <ul>
+              <li>Cash-only marketplaces ignore non-monetary value.</li>
+              <li>Pure barter sites collapse when valuations don't match.</li>
+              <li>Reputation is fragmented across listing apps and chat.</li>
+            </ul>
+          </article>
+          <article>
+            <h3><span class="num" aria-hidden="true">2</span>The approach</h3>
+            <p>SwapSpot blends listings, proposals, and reviews into one flow. Users can post an item, send a proposal that mixes barter with cash, and build a verifiable rating after each transaction.</p>
+            <ul>
+              <li>Hybrid proposals: items, money, or both.</li>
+              <li>Built-in negotiation, accept and reject states.</li>
+              <li>Post-transaction reviews feed an automatic average rating.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Features grid ────────────────────────────────── -->
+    <section id="features" aria-labelledby="features-title">
+      <div class="wrap">
+        <span class="eyebrow">Scope</span>
+        <h2 id="features-title" class="section-title">What was designed and built.</h2>
+        <p class="section-lead">Every feature below ships in the source code: views, models, serializers, and templates. It runs locally; it just doesn't run in production.</p>
+
+        <div class="features">
+          <div class="feature-card">
+            <div class="ico" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h3>Profiles &amp; Auth</h3>
+            <p>Two-step signup, profile editing, avatar uploads, and an automatic average rating on every profile.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="ico" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <h3>Item Listings</h3>
+            <p>Create, edit, and delete items with title, description, category, condition, price, listing type, and photo.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="ico" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <h3>Search &amp; Browse</h3>
+            <p>Keyword search, category filtering, and a homepage feed of available items powered by ORM queries.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="ico" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+            </div>
+            <h3>Proposal System</h3>
+            <p>Send, accept, or reject exchange and purchase proposals. Hybrid offers with goods, cash, or a mix of both.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="ico" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </div>
+            <h3>Ratings &amp; Reviews</h3>
+            <p>5-star ratings with average recalculation handled by Django signals after each new review lands.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="ico" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <h3>Notifications</h3>
+            <p>Per-user notifications for transaction updates, new proposals, and proposal status changes.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="ico" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <h3>REST API</h3>
+            <p>Full CRUD endpoints for every resource, exposed via Django REST Framework ViewSets and routers.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="ico" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h3>Static Showcase</h3>
+            <p>This portfolio site is served from <code>site/</code> on GitHub Pages, validated by GitHub Actions on each push.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Tech stack ───────────────────────────────────── -->
+    <section id="stack" aria-labelledby="stack-title">
+      <div class="wrap">
+        <span class="eyebrow">Toolkit</span>
+        <h2 id="stack-title" class="section-title">The stack, with versions.</h2>
+        <p class="section-lead">Pinned in <code>requirements.txt</code> for reproducibility. The repo runs locally on SQLite with zero extra setup.</p>
+
+        <div class="stack" role="list" aria-label="Technology badges">
+          <span class="badge" role="listitem"><span class="key">Python</span><span class="val">3.13+</span></span>
+          <span class="badge" role="listitem"><span class="key">Django</span><span class="val">6.0.5</span></span>
+          <span class="badge" role="listitem"><span class="key">DRF</span><span class="val">3.17.1</span></span>
+          <span class="badge" role="listitem"><span class="key">Pillow</span><span class="val">12.2.0</span></span>
+          <span class="badge" role="listitem"><span class="key">SQLite</span><span class="val">3.x</span></span>
+          <span class="badge" role="listitem">GitHub Actions</span>
+          <span class="badge" role="listitem">GitHub Pages</span>
+          <span class="badge" role="listitem">Semantic HTML &amp; CSS</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── API ──────────────────────────────────────────── -->
+    <section id="api" aria-labelledby="api-title">
+      <div class="wrap">
+        <span class="eyebrow">Interface</span>
+        <h2 id="api-title" class="section-title">REST API surface.</h2>
+        <p class="section-lead">Every resource is exposed via a DRF <code>ModelViewSet</code> with full CRUD: <code>list</code>, <code>create</code>, <code>retrieve</code>, <code>update</code>, <code>partial_update</code>, <code>destroy</code>.</p>
+
+        <div class="table-wrap scroll-x">
+          <table>
+            <caption class="visually-hidden" style="position:absolute;clip:rect(0 0 0 0);width:1px;height:1px;overflow:hidden;">REST API endpoints exposed by SwapSpot</caption>
+            <thead>
+              <tr><th scope="col">Endpoint</th><th scope="col">Resource</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>/api/users/</code></td><td>Users — accounts, profiles, and average rating.</td></tr>
+              <tr><td><code>/api/items/</code></td><td>Items — marketplace listings (sale, swap, or hybrid).</td></tr>
+              <tr><td><code>/api/proposals/</code></td><td>Exchange or purchase proposals between users.</td></tr>
+              <tr><td><code>/api/transactions/</code></td><td>Transactions completed from accepted proposals.</td></tr>
+              <tr><td><code>/api/reviews/</code></td><td>Post-transaction reviews and 5-star ratings.</td></tr>
+              <tr><td><code>/api/notifications/</code></td><td>In-app notifications for proposal and transaction events.</td></tr>
+              <tr><td><code>/api/tags/</code></td><td>Item tags for categorization and discovery.</td></tr>
+              <tr><td><code>/api/item-tags/</code></td><td>Through-table associating items with tags.</td></tr>
+              <tr><td><code>/api/payment-methods/</code></td><td>Per-user payment methods.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Data model ───────────────────────────────────── -->
+    <section id="models" aria-labelledby="models-title">
+      <div class="wrap">
+        <span class="eyebrow">Architecture</span>
+        <h2 id="models-title" class="section-title">Data flow at a glance.</h2>
+        <p class="section-lead">A user's lifecycle, from listing an item to closing a deal and reviewing the other side.</p>
+
+        <div class="arch" aria-label="High-level data flow diagram">
+          <div class="arch-grid">
+            <div class="arch-node">
+              <strong>1. List</strong>
+              <span><code>User</code> creates an <code>Item</code> with category, condition, listing type.</span>
+            </div>
+            <div class="arch-node">
+              <strong>2. Propose</strong>
+              <span>Another <code>User</code> sends a <code>Proposal</code> referencing items and an optional cash amount.</span>
+            </div>
+            <div class="arch-node">
+              <strong>3. Negotiate</strong>
+              <span>The owner accepts, rejects, or counter-proposes. A <code>Notification</code> is fired.</span>
+            </div>
+          </div>
+          <div class="arch-arrow" aria-hidden="true">↓</div>
+          <div class="arch-grid">
+            <div class="arch-node">
+              <strong>4. Transact</strong>
+              <span>An accepted <code>Proposal</code> becomes a <code>Transaction</code> with type and amount.</span>
+            </div>
+            <div class="arch-node">
+              <strong>5. Review</strong>
+              <span>Both sides leave a <code>Review</code> tied to the transaction with a 1–5 rating.</span>
+            </div>
+            <div class="arch-node">
+              <strong>6. Re-rank</strong>
+              <span>A signal recomputes the user's <code>average_rating</code> automatically.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Repository CTA ─────────────────────────────── -->
+    <section id="repo" aria-labelledby="repo-title">
+      <div class="wrap">
+        <div class="cta">
+          <h2 id="repo-title">Want to read the source?</h2>
+          <p>The whole project, including models, serializers, signals, tests, and templates, lives on GitHub. Clone it, install the deps, and you have a working local app in under five minutes.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://github.com/MasuRii/SwapSpot" target="_blank" rel="noopener">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 .5C5.65.5.5 5.65.5 12.02c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.24 3.35.95.1-.74.4-1.24.73-1.53-2.55-.29-5.23-1.27-5.23-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.17a10.93 10.93 0 0 1 5.74 0c2.19-1.48 3.15-1.17 3.15-1.17.62 1.58.23 2.75.11 3.04.74.8 1.18 1.82 1.18 3.07 0 4.4-2.69 5.36-5.25 5.65.41.36.78 1.06.78 2.13 0 1.54-.01 2.78-.01 3.16 0 .31.21.66.79.55C20.21 21.4 23.5 17.1 23.5 12.02 23.5 5.65 18.35.5 12 .5z"/></svg>
+              GitHub Repository
+            </a>
+            <a class="btn btn-secondary" href="https://github.com/MasuRii/SwapSpot#readme" target="_blank" rel="noopener">README</a>
+            <a class="btn btn-secondary" href="https://github.com/MasuRii/SwapSpot/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a>
+            <a class="btn btn-secondary" href="https://github.com/MasuRii/SwapSpot/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="foot-grid">
+      <span>SwapSpot &copy; 2026 — A portfolio concept by <a href="https://github.com/MasuRii" rel="noopener" target="_blank">MasuRii</a></span>
+      <span>Built with Django · Showcased via GitHub Pages</span>
+    </div>
+  </footer>
+
+  <script>
+    // ─── Theme toggle (minimal, no deps) ────────────────────
+    (function () {
+      var STORAGE_KEY = 'swapspot:theme';
+      var btn = document.querySelector('[data-theme-toggle]');
+      if (!btn) return;
+
+      function applyTheme(theme) {
+        if (theme === 'dark' || theme === 'light') {
+          document.documentElement.setAttribute('data-theme', theme);
+          btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          btn.setAttribute('aria-pressed', prefersDark ? 'true' : 'false');
+        }
+      }
+
+      var stored = null;
+      try { stored = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+      applyTheme(stored);
+
+      btn.addEventListener('click', function () {
+        var current = document.documentElement.getAttribute('data-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var next;
+        if (current === 'dark') next = 'light';
+        else if (current === 'light') next = 'dark';
+        else next = prefersDark ? 'light' : 'dark';
+        try { localStorage.setItem(STORAGE_KEY, next); } catch (e) {}
+        applyTheme(next);
+      });
+    })();
+  </script>
 
 </body>
 </html>
