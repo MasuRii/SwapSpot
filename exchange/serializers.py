@@ -8,7 +8,8 @@ from django.contrib.auth.password_validation import validate_password
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password_confirm = serializers.CharField(write_only=True, required=True)
-
+    full_name = serializers.SerializerMethodField()
+    profile_picture_url = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = [
@@ -27,18 +28,27 @@ class UserSerializer(serializers.ModelSerializer):
             'username': {'required': True},
         }
 
+    def get_full_name(self, obj):
+        return obj.get_full_name()
+    def get_profile_picture_url(self, obj):
+        if not obj.profile_picture:
+            return None
+        request = self.context.get('request')
+        url = obj.profile_picture.url
+        return request.build_absolute_uri(url) if request else url
+
     def validate(self, attrs):
-        if attrs['password'] != attrs['password_confirm']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+        password = attrs.get('password')
+        password_confirm = attrs.get('password_confirm')
+        if password or password_confirm:
+            if password != password_confirm:
+                raise serializers.ValidationError({"password": "Password fields didn't match."})
         return attrs
 
     def create(self, validated_data):
         validated_data.pop('password_confirm')
         password = validated_data.pop('password')
-        user = User(**validated_data)
-        user.set_password(password)
-        user.save()
-        return user
+        return User.objects.create_user(password=password, **validated_data)
 
     def update(self, instance, validated_data):
         validated_data.pop('password_confirm', None)
