@@ -8,10 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Repositioned the project as a **portfolio case study** rather than a hosted product. README, CHANGELOG, and the GitHub Pages site now describe SwapSpot as a static showcase backed by inspectable Django source.
-- Rewrote `site/index.html` as a polished, responsive, accessible portfolio showcase with light/dark theming, a concept-project disclaimer, full keyboard navigation, and WCAG AA-aligned contrast.
-- Reworked `.github/workflows/ci-cd.yml` to a static-only Pages pipeline: validates `site/index.html` and asserts no backend deploy artifacts remain, then deploys `site/` to GitHub Pages from `main`.
-- Simplified `SwapSpot/settings.py` back to local-review settings with SQLite only, while keeping lightweight `.env` overrides for local development.
+- Restored the repository focus to the Django web application and API with backend deployment support, rather than a separate static showcase.
+- Reworked `.github/workflows/ci-cd.yml` to run backend validation and verify Render deployment artifacts without publishing a separate static site.
+- Kept production-capable Django settings for Render deployments, including `DATABASE_URL` support, WhiteNoise static handling, and production security gates.
+- Documented the live deployment endpoints: `https://swapspot.masurii.dev/`, `https://api.swapspot.masurii.dev/api/`, and `https://swapspot-api.onrender.com/`.
 - Updated all dependencies to latest stable versions:
   - Django 5.1.2 → 6.0.5
   - djangorestframework 3.15.2 → 3.17.1
@@ -26,20 +26,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.gitignore` no longer excludes `**/migrations/` — migration files are now tracked for fresh-clone reliability.
 
 ### Added
-- Static GitHub Pages portfolio site at `site/index.html` showcasing SwapSpot as a project case study (overview, features, stack, API surface, data flow).
+- Render backend deployment configuration in `render.yaml` and `build.sh`.
 - Missing `add_item.html` template for fresh-clone readiness.
 - `0002` migration for `Item.picture` and `User.contact` fields.
 - Health regression tests covering templates, API serialization, permissions, and rating signals.
-- `.env.example` file documenting local environment variables.
+- `.env.example` file documenting local and deployment environment variables.
 - `CONTRIBUTING.md` with setup, code style, and PR guidelines.
 - `CHANGELOG.md` (this file).
 - Rewritten `README.md` with logo, quick start, project structure, API reference, and configuration guidance.
 
 ### Removed
-- `render.yaml` Render Blueprint and `build.sh` deploy script (backend deployment is no longer in scope).
-- README "Deployment" section advertising Render hosting; replaced with a "Portfolio Showcase" section describing the static Pages presentation.
-- Deployment-only Python packages from `requirements.txt`: `gunicorn`, `whitenoise`, `dj-database-url`, and `psycopg2-binary`.
-- Render/PostgreSQL/WhiteNoise configuration from `SwapSpot/settings.py`, including `DATABASE_URL` parsing, Render host handling, WhiteNoise middleware/storage, and production security gates.
+- Obsolete static showcase site directory and Cloudflare/Pages deployment configuration.
+- Separate static site validation/deployment steps from `.github/workflows/ci-cd.yml`.
 
 ### Fixed
 - Added `rest_framework` to `INSTALLED_APPS` so DRF endpoints and browsable API work correctly.

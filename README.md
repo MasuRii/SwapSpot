@@ -9,6 +9,7 @@
 </p>
 
 <p align="center">
+  <a href="#live-deployment">Live Deployment</a> ·
   <a href="#quick-start">Quick Start</a> ·
   <a href="#features">Features</a> ·
   <a href="#tech-stack">Tech Stack</a> ·
@@ -19,6 +20,12 @@
 ---
 
 SwapSpot is a hybrid marketplace where users can list items for sale, propose exchanges (barter), or combine both. It supports user profiles, item discovery, proposal negotiation, reviews, and notifications — all through a Django-powered web application with a REST API.
+
+## Live Deployment
+
+- **Frontend:** [https://swapspot.masurii.dev/](https://swapspot.masurii.dev/)
+- **API:** [https://api.swapspot.masurii.dev/api/](https://api.swapspot.masurii.dev/api/)
+- **Render origin:** [https://swapspot-api.onrender.com/](https://swapspot-api.onrender.com/)
 
 ## Features
 
@@ -97,11 +104,12 @@ cp .env.example .env
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `DJANGO_SECRET_KEY` | No | Development-only fallback | Local Django secret key for cryptographic signing. |
-| `DJANGO_DEBUG` | No | `True` | Enables Django debug mode for local development. |
-| `DJANGO_ALLOWED_HOSTS` | No | `""` | Optional comma-separated hostnames for local custom-host testing. |
+| `DJANGO_SECRET_KEY` | No | Development-only fallback | Django secret key for cryptographic signing. Render can generate this for deployments. |
+| `DJANGO_DEBUG` | No | `True` | Enables Django debug mode for local development. Set to `False` in production. |
+| `DJANGO_ALLOWED_HOSTS` | No | `""` | Optional comma-separated hostnames for local custom-host testing or deployment domains. |
+| `DATABASE_URL` | No | SQLite (`db.sqlite3`) | Optional PostgreSQL connection string used by Render or production-like environments. |
 
-The Django app always uses the repository-local SQLite database (`db.sqlite3`) for local review; no production database URL or hosted backend configuration is required.
+The Django app uses repository-local SQLite by default for local review and switches to PostgreSQL when `DATABASE_URL` is provided.
 
 ## Project Structure
 
@@ -183,15 +191,18 @@ All ViewSets support standard CRUD operations (`list`, `create`, `retrieve`, `up
 | `Tag` / `ItemTag` | name, item, tag | Item categorization |
 | `PaymentMethod` | user, provider, account_details | User payment info |
 
-## Portfolio Showcase
+## Deployment
 
-This repository is presented as a **portfolio case study**, not a hosted product:
+Render deployment support is kept in the repository for the Django web application that serves both the user-facing HTML pages and the REST API:
 
-- A static showcase site lives in [`site/index.html`](site/index.html) and is published to **GitHub Pages** by [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml).
-- The full Django source is included so the implementation can be cloned and run locally for code review.
-- There is no hosted backend, public sign-up, or production database tied to this repository.
+- [`render.yaml`](render.yaml) defines the Render web service, PostgreSQL database, environment variables, and persistent media disk.
+- [`build.sh`](build.sh) installs dependencies, collects static files, runs Django checks, and applies migrations during Render builds.
+- Configure the Render web service custom domains as:
+  - `swapspot.masurii.dev` for the user-facing frontend pages.
+  - `api.swapspot.masurii.dev` for API/backend access.
+- `DJANGO_ALLOWED_HOSTS` should include both custom domains plus `.onrender.com`; `render.yaml` provides that production value.
 
-If you are reviewing the project, the static site is the recommended entry point; the Django app underneath is meant to be inspected and run locally via the [Quick Start](#quick-start) instructions above.
+No separate Cloudflare/static frontend deployment is required for this Django application, and the removed portfolio/case-study `site/` content should not be restored.
 
 ## Contributing
 
