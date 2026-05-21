@@ -33,11 +33,11 @@ jobs:
           tidy -quiet -errors --gnu-emacs yes site/index.html 2>&1 | \
             grep -E "Error: " && exit 1 || echo "No HTML parse errors."
 
-      - name: Confirm no backend-deploy artifacts remain
+      - name: Verify backend-deploy artifacts present
         run: |
-          ! test -f render.yaml || (echo "render.yaml must not be present" && exit 1)
-          ! test -f build.sh    || (echo "build.sh must not be present"    && exit 1)
-          echo "No backend-deploy artifacts present."
+          test -f render.yaml || (echo "render.yaml must be present for Render deployment" && exit 1)
+          test -f build.sh    || (echo "build.sh must be present for Render deployment"    && exit 1)
+          echo "Backend-deploy artifacts present and validated."
 
   # ── Deploy the static portfolio to GitHub Pages from main only ──
   deploy:
