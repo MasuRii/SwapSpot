@@ -8,3 +8,8 @@ pycparser==3.0
 PyMySQL==1.1.3
 sqlparse==0.5.5
 tzdata==2026.2
+# ── Production (Render) dependencies ──
+gunicorn==23.0.0
+whitenoise==6.11.0
+dj-database-url==2.3.0
+psycopg2-binary==2.9.11
