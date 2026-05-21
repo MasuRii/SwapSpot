@@ -137,3 +137,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Render CLI artifacts
+render.yaml.lock
+
+# Build artifacts
+staticfiles/
