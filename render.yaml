@@ -1,0 +1,44 @@
+# Render Blueprint — SwapSpot Backend
+# Deploy via: render blueprints create (or use Render Dashboard "Blueprints")
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: swapspot-api
+    runtime: python
+    region: oregon
+    plan: free
+    branch: main
+    rootDir: .
+    buildCommand: bash build.sh
+    startCommand: gunicorn SwapSpot.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120
+    healthCheckPath: /api/
+    preDeployCommand: python manage.py migrate --noinput
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.12
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "api.swapspot.masurii.dev,.onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: swapspot-db
+          property: connectionString
+      - key: DJANGO_SETTINGS_MODULE
+        value: SwapSpot.settings
+
+    disk:
+      name: swapspot-media
+      mountPath: /opt/render/project/src/media
+      sizeGB: 1
+
+databases:
+  - name: swapspot-db
+    plan: free
+    region: oregon
+    databaseName: swapspot
+    ipAllowList: []
