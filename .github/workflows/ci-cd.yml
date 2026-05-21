@@ -1,4 +1,4 @@
-name: Static Pages
+name: Backend CI
 
 on:
   push:
@@ -6,59 +6,29 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
 
 jobs:
-  # ── Validate the static portfolio site on every push and PR ──
   validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Verify portfolio entry point exists
-        run: test -f site/index.html
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
 
-      - name: HTML Tidy validation (warnings allowed)
+      - name: Install dependencies
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y tidy
-          tidy -quiet -errors --gnu-emacs yes site/index.html || true
-          # Hard-fail only if tidy reports parse-level errors
-          tidy -quiet -errors --gnu-emacs yes site/index.html 2>&1 | \
-            grep -E "Error: " && exit 1 || echo "No HTML parse errors."
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: Verify backend-deploy artifacts present
+      - name: Run Django system checks
+        run: python manage.py check
+
+      - name: Verify Render deployment artifacts
         run: |
           test -f render.yaml || (echo "render.yaml must be present for Render deployment" && exit 1)
           test -f build.sh    || (echo "build.sh must be present for Render deployment"    && exit 1)
-          echo "Backend-deploy artifacts present and validated."
-
-  # ── Deploy the static portfolio to GitHub Pages from main only ──
-  deploy:
-    needs: validate
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v6
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: './site'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+          echo "Render deployment artifacts present and validated."
