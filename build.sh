@@ -24,6 +24,11 @@ echo ""
 echo ">>> Running Django system checks..."
 python manage.py check --deploy || true
 
+# ── Run database migrations ────────────────────────────────────
+echo ""
+echo ">>> Running database migrations..."
+python manage.py migrate --noinput
+
 # ── Verify migrations ────────────────────────────────────────────
 echo ""
 echo ">>> Verifying migrations..."
