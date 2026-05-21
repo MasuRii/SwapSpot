@@ -17,6 +17,8 @@
   <a href="#contributing">Contributing</a>
 </p>
 
+<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/dbaa592c-dce7-4d2d-b014-7949ee2ee655" />
+
 ---
 
 SwapSpot is a hybrid marketplace where users can list items for sale, propose exchanges (barter), or combine both. It supports user profiles, item discovery, proposal negotiation, reviews, and notifications — all through a Django-powered web application with a REST API.
